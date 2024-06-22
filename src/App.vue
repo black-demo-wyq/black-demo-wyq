@@ -1,37 +1,23 @@
-<script lang="ts">
+<script setup lang="ts">
+import mysalary from '@/components/Mysalary'
+import { ref } from 'vue'
+import Mysalaryinfo from './components/MysalaryInfo.vue'
+let { userName, salary, userInfoDetail, addSalary, addSalary2 } = mysalary()
 
-export default {
-  data() {
-    return {
-      userName: 'Tom',
-      salary: 12000,
-      userInfo:{
-        age: 1,
-        sex: 1,
-        department: 'dev',
-        skills: ['java', 'python', 'golang','C++'],
-      },
-      newSkill:'',
-      showUserInfo:false,
-      buttonShowDate:0
-    }
-  },
-  methods: {
-    addSalary() {
-      this.salary += 1000
-    },
-    addnewSkill() {
-      if(this.newSkill){
-        this.userInfo.skills.push(this.newSkill)
-      }
-    },
-    changeShowUserInfo() {
-      this.showUserInfo = !this.showUserInfo
-    },
-    buttonShow() {
-      this.userInfo.age ++;
-    }
-  }
+let name = ref()
+let mysalaryinfo = ref()
+function showRes() {
+  console.log(name)
+  console.log(name.value) // input dom元素
+  console.log(name.value.value) // 入力框值
+  console.log(name.value.getAttribute('abc'))
+}
+
+function showRes2() {
+  console.log(mysalaryinfo) // ref 对象
+  console.log(mysalaryinfo.value) // proxy对象
+  console.log(mysalaryinfo.value.userName3)
+  console.log(mysalaryinfo.value.salary3)
 }
 </script>
 
@@ -39,38 +25,34 @@ export default {
   <div>
     姓名：<input v-model="userName" /> {{ userName }}<br />
     薪水：<input type="number" v-model="salary" /> {{ salary }}<br />
-    <button @click="addSalary">提交</button>
-    <button @click="changeShowUserInfo">查看个人信息</button>
-<hr />    
+    <!--另一种表现（reactive）-->
+    姓名2：<input v-model="userInfoDetail.userName2" /> {{ userInfoDetail.userName2 }}<br />
+    薪水2：<input type="number" v-model="userInfoDetail.salary2" /> {{ userInfoDetail.salary2
+    }}<br />
+    <button @click="addSalary">提交1</button>
+    <!--另一种表现（reactive）-->
+    <button @click="addSalary2">提交2</button>
+  </div>
+  <!--另一种表现（ref）-->
+  <div class="userInfo">
+    姓名：<input ref="name" abc="testabcd" />
+    <button @click="showRes">提交3</button>
+  </div>
 
-
-  <div class="userInfo" v-show="showUserInfo" >
-    <h2>个人信息</h2>
-    <p>年龄：<input type="number" v-model="userInfo.age"/></p>
-    <span><input type="button" @click="buttonShow" value="年龄+1"/></span>
-    <p>性别：<input type="radio" value="1" v-model="userInfo.sex">男</input><input type="radio" value="2" v-model="userInfo.sex">女</input></p>
-    <p>岗位：<select v-model="userInfo.department">
-      <option value="dev">开发</option>
-      <option value="test">测试</option>
-      <option value="maintain">运维</option>
-      <option value="sale">销售</option>
-    </select>
-  </p>
-  <p>技术：<span v-for="skill in userInfo.skills" v-bind:key="skill">{{skill}}</span></p>
-  <p>新技术：<input v-model="newSkill"/><input type ="button" @click="addnewSkill" value="添加技术名"/></p>
-  <p>个人信息汇总{{userInfo}}</p>
-  
-</div>
+  <!--下一个例子（关联文件MysalaryInfo.vue）-->
+  <div>
+    <Mysalaryinfo ref="mysalaryinfo"></Mysalaryinfo>
+    <button @click="showRes2">查看薪水信息</button>
   </div>
 </template>
 
 <!-- scoped意思是该样式只在当前类中有效， 不影响别人-->
 <style scoped>
-.userInfo{
-background-color: rgb(111, 255, 0);
-widows: 80%;
+.userInfo {
+  background-color: rgb(111, 255, 0);
+  widows: 80%;
 }
-.userInfo span{
+.userInfo span {
   background-color: yellow;
   margin-left: 10px;
   border: 1px;
